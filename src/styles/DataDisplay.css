@@ -1,0 +1,13 @@
+.data-display {
+  padding: 20px;
+  text-align: center;
+}
+
+.data-display pre {
+  text-align: left;
+  display: inline-block;
+  background-color: #fff;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}

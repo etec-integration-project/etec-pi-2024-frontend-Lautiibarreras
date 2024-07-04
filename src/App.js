@@ -1,12 +1,23 @@
 import React from 'react';
-import Auth from './components/Auth';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import Navbar from './components/Navbar';
+import DataDisplay from './components/DataDisplay';
+import DataForm from './components/DataForm';
+import './styles/App.css';
 
-function App() {
+const App = () => {
   return (
-    <div className="App">
-      <Auth />
-    </div>
+    <Router>
+      <div className="app">
+        <Navbar />
+        <Routes>
+          <Route path="/" element={<h1>Bienvenido al Proyecto</h1>} />
+          <Route path="/data-display" element={<DataDisplay />} />
+          <Route path="/data-form" element={<DataForm />} />
+        </Routes>
+      </div>
+    </Router>
   );
-}
+};
 
 export default App;
