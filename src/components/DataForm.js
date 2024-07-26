@@ -3,41 +3,55 @@ import axios from 'axios';
 import '../styles/DataForm.css';
 
 const DataForm = () => {
-  const [data, setData] = useState('');
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
 
   const handleSubmit = async (event) => {
     event.preventDefault();
 
     try {
-      const response = await axios.post('http://localhost:3000/data', { // Asegúrate de que la URL esté correcta
-        data: data
+      console.log('Enviando datos:', { username, password }); // Log para depuración
+
+      const response = await axios.post('http://localhost:3000/api/registrar', {
+        username,
+        password
       });
-      if (response.status === 200) {
-        setData(''); // Reset the input field
-        alert('Datos enviados correctamente');
+
+      if (response.status === 201) {
+        setUsername(''); // Reset the input fields
+        setPassword('');
+        alert('Usuario registrado con éxito');
       } else {
         console.error('Error submitting data:', response.statusText);
         alert('Error al enviar los datos');
       }
     } catch (error) {
-      console.error('Error submitting data:', error);
+      console.error('Error submitting data:', error.response ? error.response.data : error.message); // Log de error detallado
       alert('Error al enviar los datos');
     }
   };
 
   return (
     <div className="data-form">
-      <h1>Enviar Datos</h1>
+      <h1>Registrar Usuario</h1>
       <form onSubmit={handleSubmit}>
-        <label htmlFor="data-input">Datos:</label>
+        <label htmlFor="username-input">Username:</label>
         <input
           type="text"
-          id="data-input"
-          value={data}
-          onChange={(e) => setData(e.target.value)}
+          id="username-input"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
           required
         />
-        <button type="submit">Enviar</button>
+        <label htmlFor="password-input">Password:</label>
+        <input
+          type="password"
+          id="password-input"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+        />
+        <button type="submit">Registrar</button>
       </form>
     </div>
   );
