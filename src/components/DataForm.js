@@ -1,60 +1,53 @@
-import React, { useState } from 'react';
+
+import React from 'react';
 import axios from 'axios';
-import '../styles/DataForm.css';
+import BACKEND from '../config';
 
-const DataForm = () => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+const DataForm = ({ task, setTask, addTask }) => {
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
+    const handleChange = (e) => {
+        setTask({
+            ...task,
+            [e.target.name]: e.target.value
+        });
+    };
 
-    try {
-      console.log('Enviando datos:', { username, password }); // Log para depuración
+    let {title, description} = task;
 
-      const response = await axios.post('http://localhost:3000/api/registrar', {
-        username,
-        password
-      });
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        if (!title || !description) {
+            alert('Please fill in all fields');
+            return;
+        }
+        const newTask = { title: title, description: description };
+        axios
+            .post(`${BACKEND}/tasks`, newTask)
+            .then((res) => {
+                addTask(res.data);
+                setTask({
+                    title: '',
+                    description: ''
+                });
+                    })
+            .catch((err) => {
+                console.error(err);
+            });
+    };
 
-      if (response.status === 201) {
-        setUsername(''); // Reset the input fields
-        setPassword('');
-        alert('Usuario registrado con éxito');
-      } else {
-        console.error('Error submitting data:', response.statusText);
-        alert('Error al enviar los datos');
-      }
-    } catch (error) {
-      console.error('Error submitting data:', error.response ? error.response.data : error.message); // Log de error detallado
-      alert('Error al enviar los datos');
-    }
-  };
-
-  return (
-    <div className="data-form">
-      <h1>Registrar Usuario</h1>
-      <form onSubmit={handleSubmit}>
-        <label htmlFor="username-input">Username:</label>
-        <input
-          type="text"
-          id="username-input"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          required
-        />
-        <label htmlFor="password-input">Password:</label>
-        <input
-          type="password"
-          id="password-input"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
-        <button type="submit">Registrar</button>
-      </form>
-    </div>
-  );
+    return (
+        <form onSubmit={handleSubmit}>
+            <div className="mb-3">
+                <label htmlFor='title' className='form-label'>Title</label>
+                <input value={title} name="title" onChange={handleChange} id="title" type="text" className="form-control" />
+            </div>
+            <div className="mb-3">
+                <label htmlFor='description' className='form-label'>Description</label>
+                <input value={description} name="description" onChange={handleChange} id="description" type="text" className="form-control" />
+            </div>
+            <button type="submit" className="btn btn-primary">Submit</button>
+        </form>
+    );
 };
 
 export default DataForm;

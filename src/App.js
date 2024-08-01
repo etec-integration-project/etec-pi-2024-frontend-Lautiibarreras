@@ -1,22 +1,54 @@
-import React from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import React, { Fragment, useState, useEffect } from 'react';
+import axios from 'axios';
 import Navbar from './components/Navbar';
 import DataDisplay from './components/DataDisplay';
 import DataForm from './components/DataForm';
-import './styles/App.css';
+import BACKEND from './config';
 
 const App = () => {
+
+  const [task, setTask] = useState({
+      title: '',
+      description: ''
+  });
+
+  const [tasks, setTasks] = useState([]);
+
+  const [listUpdated, setListUpdated] = useState(false);
+
+  useEffect(() => {
+      const fetchTasks = () => {
+          const url = `${BACKEND}/tasks`;
+          console.log(url);
+          axios.get(url)
+              .then((response) => {
+                  setTasks(response.data);
+              })
+      };
+      fetchTasks();
+      setListUpdated(false)
+  }, [listUpdated]);
+
+  const addTask = (newTask) => {
+      setTasks([...tasks, newTask]);
+  };
+
   return (
-    <Router>
-      <div className="app">
-        <Navbar />
-        <Routes>
-          <Route path="/" element={<h1>Bienvenido al Proyecto</h1>} />
-          <Route path="/data-display" element={<DataDisplay />} />
-          <Route path="/data-form" element={<DataForm />} />
-        </Routes>
-      </div>
-    </Router>
+      <Fragment>
+          <Navbar brand="App" />
+          <div className="container">
+              <div className='row'>
+                  <div className='col-7'>
+                      <h2 style={{ textAlign: 'center' }}>Lista</h2>
+                      <DataDisplay task={task} setTask={setTask} tasks={tasks} setListUpdated={setListUpdated} />
+                  </div>
+                  <div className='col-5'>
+                      <h2 style={{ textAlign: 'center' }}>Formulario</h2>
+                      <DataForm task={task} setTask={setTask} addTask={addTask} />
+                  </div>
+              </div>
+          </div>
+      </Fragment>
   );
 };
 
