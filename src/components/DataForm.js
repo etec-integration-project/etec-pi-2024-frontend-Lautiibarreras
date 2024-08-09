@@ -1,52 +1,42 @@
-
 import React from 'react';
-import axios from 'axios';
-import BACKEND from '../config';
 
-const DataForm = ({ task, setTask, addTask }) => {
+const DataForm = ({ user, setUser, registerUser, loginUser, appointment, setAppointment, addAppointment }) => {
 
-    const handleChange = (e) => {
-        setTask({
-            ...task,
+    const handleUserChange = (e) => {
+        setUser({
+            ...user,
             [e.target.name]: e.target.value
         });
     };
 
-    let {title, description} = task;
-
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        if (!title || !description) {
-            alert('Please fill in all fields');
-            return;
-        }
-        const newTask = { title: title, description: description };
-        axios
-            .post(`${BACKEND}/tasks`, newTask)
-            .then((res) => {
-                addTask(res.data);
-                setTask({
-                    title: '',
-                    description: ''
-                });
-                    })
-            .catch((err) => {
-                console.error(err);
-            });
+    const handleAppointmentChange = (e) => {
+        setAppointment({
+            ...appointment,
+            [e.target.name]: e.target.value
+        });
     };
 
     return (
-        <form onSubmit={handleSubmit}>
-            <div className="mb-3">
-                <label htmlFor='title' className='form-label'>Title</label>
-                <input value={title} name="title" onChange={handleChange} id="title" type="text" className="form-control" />
-            </div>
-            <div className="mb-3">
-                <label htmlFor='description' className='form-label'>Description</label>
-                <input value={description} name="description" onChange={handleChange} id="description" type="text" className="form-control" />
-            </div>
-            <button type="submit" className="btn btn-primary">Submit</button>
-        </form>
+        <div>
+            {user && (
+                <div>
+                    <h3>Registro de Usuario</h3>
+                    <input type="text" name="username" placeholder="Usuario" onChange={handleUserChange} value={user.username} />
+                    <input type="password" name="password" placeholder="Contraseña" onChange={handleUserChange} value={user.password} />
+                    <button onClick={registerUser}>Registrar</button>
+                    <button onClick={loginUser}>Iniciar Sesión</button>
+                </div>
+            )}
+            {appointment && (
+                <div>
+                    <h3>Crear Cita</h3>
+                    <input type="text" name="user_id" placeholder="ID del Usuario" onChange={handleAppointmentChange} value={appointment.user_id} />
+                    <input type="datetime-local" name="appointment_date" placeholder="Fecha de Cita" onChange={handleAppointmentChange} value={appointment.appointment_date} />
+                    <input type="text" name="description" placeholder="Descripción" onChange={handleAppointmentChange} value={appointment.description} />
+                    <button onClick={addAppointment}>Agregar Cita</button>
+                </div>
+            )}
+        </div>
     );
 };
 
