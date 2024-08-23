@@ -6,12 +6,9 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-      - "3001:3001" 
+      - "3001:3001"
     environment:
       - NODE_ENV=development
       - REACT_APP_BACKEND=/api  
-    volumes:
-      - .:/app
-      - /app/node_modules
     stdin_open: true
     tty: true

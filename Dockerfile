@@ -2,7 +2,7 @@ FROM node:20-alpine
 
 WORKDIR /app
 
-COPY . /app
+COPY . .
 
 ENV REACT_APP_BACKEND=/api
 
@@ -15,5 +15,3 @@ RUN npm run build
 EXPOSE 3001
 
 CMD ["serve", "-s", "build", "-l", "3001", "--single"]
-
-

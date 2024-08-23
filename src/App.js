@@ -4,6 +4,10 @@ import Navbar from './components/Navbar';
 import DataDisplay from './components/DataDisplay';
 import DataForm from './components/DataForm';
 import BACKEND from './config';
+import Header from './components/Header';
+import MainContent from './components/MainContent';
+import Footer from './components/Footer';
+import './components/Styles/App.css';
 
 const App = () => {
     const [user, setUser] = useState({
@@ -63,8 +67,10 @@ const App = () => {
 
     return (
         <Fragment>
-            <Navbar brand="App" />
+            <Header />
+            <MainContent />
             <div className="container">
+                <Navbar brand="App" />
                 <div className='row'>
                     <div className='col-7'>
                         <h2 style={{ textAlign: 'center' }}>Lista de Citas</h2>
@@ -78,6 +84,7 @@ const App = () => {
                     </div>
                 </div>
             </div>
+            <Footer />
         </Fragment>
     );
 };
