@@ -1,12 +1,8 @@
 import React, { Fragment, useState, useEffect } from 'react';
 import axios from 'axios';
-import Navbar from './components/Navbar';
 import DataDisplay from './components/DataDisplay';
 import DataForm from './components/DataForm';
 import BACKEND from './config';
-import Header from './components/Header';
-import MainContent from './components/MainContent';
-import Footer from './components/Footer';
 import './components/Styles/App.css';
 
 const App = () => {
@@ -70,8 +66,6 @@ const App = () => {
 
     return (
         <Fragment>
-            <Header />
-            <MainContent />
             <div className="container">
                 {/* <Navbar brand="App" /> */}
                 <div className='row'>
@@ -87,7 +81,6 @@ const App = () => {
                     </div>
                 </div>
             </div>
-            <Footer />
         </Fragment>
     );
 };
