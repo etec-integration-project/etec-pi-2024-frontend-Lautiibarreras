@@ -3,7 +3,6 @@ import axios from 'axios';
 import DataDisplay from './components/DataDisplay';
 import DataForm from './components/DataForm';
 import BACKEND from './config';
-import './components/Styles/App.css';
 
 const App = () => {
     const [user, setUser] = useState({
