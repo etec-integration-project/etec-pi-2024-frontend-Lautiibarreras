@@ -25,9 +25,12 @@ const App = () => {
     const [listUpdated, setListUpdated] = useState(false);
 
     useEffect(() => {
+        console.log("backend", BACKEND);
         const fetchAppointments = async () => {
             try {
-                const response = await axios.get(`${BACKEND}/appointments/usuario/1`); // Asume user_id=1, deberías ajustar esto
+                const url = `${BACKEND}/appointments/usuario/1`;
+                console.log(url); 
+                const response = await axios.get(url); // Asume user_id=1, deberías ajustar esto
                 setAppointments(response.data);
             } catch (error) {
                 console.error('Error al obtener las citas:', error);
@@ -70,7 +73,7 @@ const App = () => {
             <Header />
             <MainContent />
             <div className="container">
-                <Navbar brand="App" />
+                {/* <Navbar brand="App" /> */}
                 <div className='row'>
                     <div className='col-7'>
                         <h2 style={{ textAlign: 'center' }}>Lista de Citas</h2>
