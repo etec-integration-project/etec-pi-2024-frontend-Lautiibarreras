@@ -1,17 +1,29 @@
-FROM node:20-alpine
+# Usar una imagen de Node para construir la aplicación
+FROM node:20-alpine AS build
 
 WORKDIR /app
 
+# Copiar el código fuente al contenedor
 COPY . .
 
+# Establecer la variable de entorno para el backend
 ENV REACT_APP_BACKEND=/api
 
-RUN npm install
+# Instalar dependencias y construir el proyecto
+RUN npm install && npm run build
 
-RUN npm install -g serve
+# Usar una imagen de nginx para servir la aplicación
+FROM nginx:stable-alpine
 
-RUN npm run build
+# Copiar el build del frontend al directorio de nginx
+COPY --from=build /app/build /usr/share/nginx/html
 
-EXPOSE 3000
+# Copiar la configuración de nginx
+COPY nginx.conf /etc/nginx/nginx.conf
+COPY default.conf /etc/nginx/conf.d/default.conf
 
-CMD ["serve", "-s", "build"]
+# Exponer el puerto 80
+EXPOSE 80
+
+# Iniciar nginx
+CMD ["nginx", "-g", "daemon off;"]
