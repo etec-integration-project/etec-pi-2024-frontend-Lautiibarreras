@@ -7,7 +7,7 @@ services:
         soft: 1048576
         hard: 1048576
     ports:
-      - 3306:3306
+      - 3307:3306
     restart: always
     volumes:
       - ./mysql-db:/var/lib/mysql
@@ -26,7 +26,7 @@ services:
   backend:
     build:
       context: https://github.com/etec-integration-project/etec-pi-2024-backend-Lautiibarreras.git
-      # context: /lungoh8Oopeiwahl/workspaces/proyecto_integrador/barreras/etec-pi-2024-backend-Lautiibarreras
+      # context: C:\Users\ETEC\Desktop\etec-pi-2024-backend-Lautiibarreras
       dockerfile: Dockerfile
     restart: always
     ports:
@@ -46,7 +46,7 @@ services:
   frontend:
     build:
       context: https://github.com/etec-integration-project/etec-pi-2024-frontend-Lautiibarreras.git
-      # context: /lungoh8Oopeiwahl/workspaces/proyecto_integrador/barreras/etec-pi-2024-frontend-Lautiibarreras
+      # context: C:\Users\ETEC\Desktop\etec-pi-2024-frontend-Lautiibarreras
       dockerfile: Dockerfile
     restart: always
     ports:
