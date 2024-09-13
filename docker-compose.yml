@@ -26,7 +26,7 @@ services:
   backend:
     build:
       context: https://github.com/etec-integration-project/etec-pi-2024-backend-Lautiibarreras.git
-      # context: C:\Users\ETEC\Desktop\etec-pi-2024-backend-Lautiibarreras
+      #context: /Users/ETEC/Desktop/etec-pi-2024-backend-Lautiibarreras
       dockerfile: Dockerfile
     restart: always
     ports:
@@ -46,7 +46,8 @@ services:
   frontend:
     build:
       context: https://github.com/etec-integration-project/etec-pi-2024-frontend-Lautiibarreras.git
-      # context: C:\Users\ETEC\Desktop\etec-pi-2024-frontend-Lautiibarreras
+      #context: /Users/ETEC/Desktop/etec-pi-2024-frontend-Lautiibarreras
+      
       dockerfile: Dockerfile
     restart: always
     ports:
