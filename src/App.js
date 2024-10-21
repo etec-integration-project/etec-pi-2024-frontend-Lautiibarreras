@@ -1,12 +1,12 @@
-import React, { Fragment, useState, useEffect } from 'react';
+import React, { Fragment, useState, useEffect } from 'react'; 
 import axios from 'axios';
 import { BrowserRouter as Router, Route, Link, Routes, Navigate } from 'react-router-dom';
-import DataDisplay from './components/DataDisplay';
-import DataForm from './components/DataForm';
 import CitasPage from './pages/CitasPage'; // Nueva página para citas
+import CotizacionPage from './pages/CotizacionPage'; // Nueva página para citas
 import BACKEND from './config';
 import 'bootstrap/dist/css/bootstrap.min.css';  // Importar Bootstrap CSS
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';  // Importar Bootstrap JS
+import './App.css';  // Importar el archivo de estilos personalizados
 
 const App = () => {
     const [user, setUser] = useState({
@@ -38,7 +38,6 @@ const App = () => {
         try {
             const response = await axios.post(`${BACKEND}/auth/registrar`, user); // Llamada al backend para registrar
             console.log('Usuario registrado:', response.data);
-            // Después del registro exitoso, iniciamos sesión automáticamente
             await loginUser(); // Llamar la función loginUser directamente
             setErrorMessage('');
         } catch (error) {
@@ -53,11 +52,11 @@ const App = () => {
 
     // Función para iniciar sesión llamando al backend
     const loginUser = async (e) => {
-        if (e) e.preventDefault(); // Prevenir el comportamiento por defecto si se pasa el evento del formulario
+        if (e) e.preventDefault();
         try {
-            const response = await axios.post(`${BACKEND}/auth/iniciarSesion`, user, { withCredentials: true }); // Llamada al backend para iniciar sesión con cookies
+            const response = await axios.post(`${BACKEND}/auth/iniciarSesion`, user, { withCredentials: true });
             console.log('Usuario autenticado:', response.data);
-            setLoggedInUser(response.data); // Guardar el usuario autenticado
+            setLoggedInUser(response.data);
             setErrorMessage('');
         } catch (error) {
             setErrorMessage('Usuario o contraseña incorrectos.');
@@ -87,9 +86,12 @@ const App = () => {
                                 <li className="nav-item">
                                     <Link className="nav-link" to="/">Inicio</Link>
                                 </li>
+                                <li className="nav-item">
+                                    <Link className="nav-link" to="/cotizacion">Cotización</Link> {/* Acceso a la página de cotización sin iniciar sesión */}
+                                </li>
                                 {loggedInUser && (
                                     <li className="nav-item">
-                                        <Link className="nav-link" to="/citas">Citas</Link> {/* Nuevo link a la página de citas */}
+                                        <Link className="nav-link" to="/citas">Citas</Link>
                                     </li>
                                 )}
                             </ul>
@@ -143,8 +145,15 @@ const App = () => {
 
                 {/* Rutas */}
                 <Routes>
-                    <Route exact path="/" element={<div className="container"><h2>Bienvenido a la aplicación</h2></div>} />
-                    <Route path="/citas" element={loggedInUser ? <CitasPage userId={loggedInUser.id} /> : <Navigate to="/" />} />  {/* Redirige si no está autenticado */}
+                    <Route exact path="/" element={
+                        <div className="banner-container">
+                            <div className="banner">
+                                <h2 className="banner-text">Bienvenido a MayBa</h2>
+                            </div>
+                        </div>
+                    } />
+                    <Route path="/citas" element={loggedInUser ? <CitasPage userId={loggedInUser.id} /> : <Navigate to="/" />} />
+                    <Route path="/cotizacion" element={<CotizacionPage />} /> {/* Nueva Ruta */}
                 </Routes>
             </Fragment>
         </Router>
