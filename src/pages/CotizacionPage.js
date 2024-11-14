@@ -1,58 +1,88 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import './CotizacionCSS.css'; // Asegúrate de tener el archivo CSS configurado
 
-function Cotizacion() {
+const Cotizacion = ({ userId }) => {
   const [tipoServicio, setTipoServicio] = useState('');
   const [cantidad, setCantidad] = useState('');
-  const [resultado, setResultado] = useState(null);
+  const [precioTotal, setPrecioTotal] = useState(null);
+  const [cotizacionesAnteriores, setCotizacionesAnteriores] = useState([]);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  useEffect(() => {
+    // Obtener las cotizaciones anteriores del usuario
+    const fetchCotizacionesAnteriores = async () => {
+      try {
+        const response = await axios.get(`/api/cotizaciones/cotizaciones/${userId}`);
+        setCotizacionesAnteriores(response.data);
+      } catch (error) {
+        console.error('Error al obtener cotizaciones anteriores:', error);
+      }
+    };
+
+    fetchCotizacionesAnteriores();
+  }, [userId]);
+
+  const handleCalcularCotizacion = async () => {
     try {
-      const response = await axios.post('/api/cotizacion', {
+      const response = await axios.post('/api/cotizaciones/cotizacion', {
         tipo_servicio: tipoServicio,
-        cantidad: parseFloat(cantidad),
-        id_usuario: null // Ajusta esto si tienes autenticación de usuario
+        cantidad,
+        id_usuario: userId,
       });
-      setResultado(response.data.precioTotal);
+      setPrecioTotal(response.data.precioTotal); // Almacena el precio total calculado
+      setCotizacionesAnteriores([...cotizacionesAnteriores, { cantidad }]); // Actualiza la lista de cotizaciones anteriores
     } catch (error) {
       console.error('Error al calcular cotización:', error);
     }
   };
 
   return (
-    <div>
-      <h1>Cotización</h1>
-      {resultado !== null && (
-        <div style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '20px' }}>
-          Precio Total: {resultado} pesos
-        </div>
-      )}
-      <form onSubmit={handleSubmit}>
+    <div className="cotizacion-container">
+      <div className="form-container">
+        <h2>Cotizar producto</h2>
+        <p>Obtén tu cotización personalizada en segundos.</p>
+        
         <label>
           Tipo de Servicio:
           <select value={tipoServicio} onChange={(e) => setTipoServicio(e.target.value)} required>
-            <option value="">Seleccione una opción</option>
+            <option value="">Seleccionar</option>
             <option value="Desinfección tradicional por metro cuadrado">Desinfección tradicional por metro cuadrado</option>
             <option value="Termoniebla por metro cuadrado">Termoniebla por metro cuadrado</option>
             <option value="Termoniebla por kilómetro lineal">Termoniebla por kilómetro lineal</option>
           </select>
         </label>
+
         <label>
-          Cantidad ({tipoServicio.includes('kilómetro') ? 'kilómetros lineales' : 'metros cuadrados'}):
+          Cantidad (metros cuadrados):
           <input
             type="number"
-            min="0"
-            step="any"
             value={cantidad}
             onChange={(e) => setCantidad(e.target.value)}
             required
+            placeholder="Especifica la cantidad"
           />
         </label>
-        <button type="submit">Calcular Cotización</button>
-      </form>
+
+        <button onClick={handleCalcularCotizacion}>Calcular Cotización</button>
+
+        {precioTotal !== null && (
+          <div className="precio-total">
+            <h3>Precio Total:</h3>
+            <p>${precioTotal.toFixed(2)}</p>
+          </div>
+        )}
+      </div>
+
+      <div className="cotizaciones-anteriores">
+        <h2>Cotizaciones Anteriores</h2>
+        <ul>
+          {cotizacionesAnteriores.map((cotizacion, index) => (
+            <li key={index}>Cantidad: {cotizacion.cantidad} m²</li>
+          ))}
+        </ul>
+      </div>
     </div>
   );
-}
+};
 
 export default Cotizacion;

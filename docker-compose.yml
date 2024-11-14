@@ -58,6 +58,7 @@ services:
       - app_network
     environment:
       - PORT=3000
+      - JWT_SECRET=MayBaTokenBackend
     
 
 networks:
