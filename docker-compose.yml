@@ -42,6 +42,7 @@ services:
       - MYSQLDB_ROOT_PASSWORD=root
       - MYSQLDB_DATABASE=mayba
       - PORT=5000
+      - JWT_SECRET=MayBaTokenBackend
 
   frontend:
     build:
