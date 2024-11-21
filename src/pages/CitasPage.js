@@ -22,20 +22,28 @@ const CitasPage = ({ userId }) => {
         e.preventDefault();
 
         // Obtener el token del almacenamiento (localStorage o sessionStorage)
-        const token = localStorage.getItem('token'); // Suponiendo que el token se almacena en localStorage
+        // const token = localStorage.getItem('token'); // Suponiendo que el token se almacena en localStorage
 
         try {
             // Enviar el token en el encabezado de autorización
-            const response = await axios.post(`${BACKEND}/appointments/asignar`, appointment, {
-                headers: {
-                    Authorization: `Bearer ${token}` // Incluimos el token en el encabezado
-                }
-            });
+            // const response = await axios.post(`${BACKEND}/appointments/asignar`, appointment, {
+            //     headers: {
+            //         Authorization: `Bearer ${token}` // Incluimos el token en el encabezado
+            //     }
+            // });
+
+            await axios.post(`${BACKEND}/appointments/asignar`, appointment, {
+                withCredentials: true
+            })
+
             setMessage('Cita agregada exitosamente');
         } catch (error) {
             setMessage('Error al agregar la cita');
             console.error('Error al asignar la cita:', error);
         }
+
+        
+        
     };
 
     return (

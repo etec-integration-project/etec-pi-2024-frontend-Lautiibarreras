@@ -17,26 +17,12 @@ const App = () => {
     const [loggedInUser, setLoggedInUser] = useState(null); // Estado para manejar el usuario autenticado
     const [errorMessage, setErrorMessage] = useState('');
 
-    // Verificar si el usuario está autenticado al cargar la aplicación
-    useEffect(() => {
-        const checkAuthStatus = async () => {
-            try {
-                const response = await axios.get(`${BACKEND}/auth/status`, { withCredentials: true });
-                if (response.data.authenticated) {
-                    setLoggedInUser(response.data.user); // Establecer el usuario autenticado
-                }
-            } catch (error) {
-                console.error('Error al verificar autenticación:', error);
-            }
-        };
-        checkAuthStatus();
-    }, []);
-
+   
     // Función para registrar un usuario y luego iniciar sesión automáticamente
     const registerUser = async (e) => {
         e.preventDefault(); 
         try {
-            const response = await axios.post(`${BACKEND}/auth/registrar`, user); // Llamada al backend para registrar
+            const response = await axios.post(`${BACKEND}/auth/registrar`, user, { withCredentials: true }); // Llamada al backend para registrar
             console.log('Usuario registrado:', response.data);
             await loginUser(); // Llamar la función loginUser directamente
             setErrorMessage('');
