@@ -1,12 +1,13 @@
-import React, { Fragment, useState, useEffect } from 'react'; 
+import React, { Fragment, useState } from 'react'; 
 import axios from 'axios';
 import { BrowserRouter as Router, Route, Link, Routes, Navigate } from 'react-router-dom';
-import CitasPage from './pages/CitasPage'; // Nueva página para citas
-import CotizacionPage from './pages/CotizacionPage'; // Nueva página para citas
+import CitasPage from './pages/CitasPage'; 
+import CotizacionPage from './pages/CotizacionPage'; 
+import PricesPage from './pages/PricesPage'; 
 import BACKEND from './config';
-import 'bootstrap/dist/css/bootstrap.min.css';  // Importar Bootstrap CSS
-import 'bootstrap/dist/js/bootstrap.bundle.min.js';  // Importar Bootstrap JS
-import './App.css';  // Importar el archivo de estilos personalizados
+import 'bootstrap/dist/css/bootstrap.min.css'; 
+import 'bootstrap/dist/js/bootstrap.bundle.min.js'; 
+import './App.css';
 
 const App = () => {
     const [user, setUser] = useState({
@@ -14,17 +15,17 @@ const App = () => {
         password: ''
     });
 
-    const [loggedInUser, setLoggedInUser] = useState(null); // Estado para manejar el usuario autenticado
+    const [loggedInUser, setLoggedInUser] = useState(null); 
     const [errorMessage, setErrorMessage] = useState('');
 
-   
-    // Función para registrar un usuario y luego iniciar sesión automáticamente
+    const isAdmin = loggedInUser && loggedInUser[0]?.username === 'admin';
+
     const registerUser = async (e) => {
         e.preventDefault(); 
         try {
-            const response = await axios.post(`${BACKEND}/auth/registrar`, user, { withCredentials: true }); // Llamada al backend para registrar
+            const response = await axios.post(`${BACKEND}/auth/registrar`, user, { withCredentials: true });
             console.log('Usuario registrado:', response.data);
-            await loginUser(); // Llamar la función loginUser directamente
+            await loginUser();
             setErrorMessage('');
         } catch (error) {
             if (error.response && error.response.status === 409) {
@@ -36,13 +37,12 @@ const App = () => {
         }
     };
 
-    // Función para iniciar sesión llamando al backend
     const loginUser = async (e) => {
         if (e) e.preventDefault();
         try {
             const response = await axios.post(`${BACKEND}/auth/iniciarSesion`, user, { withCredentials: true });
             console.log('Usuario autenticado:', response.data);
-            setLoggedInUser(response.data);
+            setLoggedInUser(response.data); // Asegúrate de que `username` esté incluido en los datos de respuesta
             setErrorMessage('');
         } catch (error) {
             setErrorMessage('Usuario o contraseña incorrectos.');
@@ -73,11 +73,16 @@ const App = () => {
                                     <Link className="nav-link" to="/">Inicio</Link>
                                 </li>
                                 <li className="nav-item">
-                                    <Link className="nav-link" to="/cotizacion">Cotización</Link> {/* Acceso a la página de cotización sin iniciar sesión */}
+                                    <Link className="nav-link" to="/cotizacion">Cotización</Link>
                                 </li>
                                 {loggedInUser && (
                                     <li className="nav-item">
                                         <Link className="nav-link" to="/citas">Citas</Link>
+                                    </li>
+                                )}
+                                {isAdmin && (
+                                    <li className="nav-item">
+                                        <Link className="nav-link" to="/prices">Agregar Precios</Link>
                                     </li>
                                 )}
                             </ul>
@@ -139,7 +144,8 @@ const App = () => {
                         </div>
                     } />
                     <Route path="/citas" element={loggedInUser ? <CitasPage userId={loggedInUser.id} /> : <Navigate to="/" />} />
-                    <Route path="/cotizacion" element={<CotizacionPage />} /> {/* Nueva Ruta */}
+                    <Route path="/cotizacion" element={<CotizacionPage />} />
+                    <Route path="/prices" element={isAdmin ? <PricesPage /> : <Navigate to="/" />} />
                 </Routes>
             </Fragment>
         </Router>
