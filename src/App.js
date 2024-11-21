@@ -42,6 +42,7 @@ const App = () => {
         try {
             const response = await axios.post(`${BACKEND}/auth/iniciarSesion`, user, { withCredentials: true });
             console.log('Usuario autenticado:', response.data);
+
             setLoggedInUser(response.data); // Asegúrate de que `username` esté incluido en los datos de respuesta
             setErrorMessage('');
         } catch (error) {
@@ -143,7 +144,7 @@ const App = () => {
                             </div>
                         </div>
                     } />
-                    <Route path="/citas" element={loggedInUser ? <CitasPage userId={loggedInUser.id} /> : <Navigate to="/" />} />
+                    <Route path="/citas" element={loggedInUser ? <CitasPage userId={loggedInUser[0].id} /> : <Navigate to="/" />} />
                     <Route path="/cotizacion" element={<CotizacionPage />} />
                     <Route path="/prices" element={isAdmin ? <PricesPage /> : <Navigate to="/" />} />
                 </Routes>
